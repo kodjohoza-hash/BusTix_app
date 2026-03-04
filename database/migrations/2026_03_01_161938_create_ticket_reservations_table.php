@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('ticket_reservations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('')->restrictOnDelete('');
-            $table->foreignId('payment_id')->constrained('')->restrictOnDelete('');
-            $table->foreignId('trip_id')->constrained('')->restrictOnDelete('');
-            $table->foreignId('user_id')->constrained('')->restrictOnDelete('');
+            $table->foreignId('customer_id')->constrained('customers')->restrictOnDelete('');
+            $table->foreignId('payment_id')->constrained('payments')->restrictOnDelete('');
+            $table->foreignId('trip_id')->constrained('trips')->restrictOnDelete('');
+            $table->foreignId('user_id')->constrained('users')->restrictOnDelete('');
             $table->dateTime('reservation');
             $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->string('code', 10)->unique();

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('buses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('displacement_id')->constrained('')->restrictOnDelete('');
+            $table->foreignId('displacement_id')->constrained('displacements')->restrictOnDelete('');
             $table->string('bus_number');
             $table->string('driver_name');
             $table->integer('capacity');

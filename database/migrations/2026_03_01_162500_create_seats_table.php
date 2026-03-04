@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('seats', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bus_id')->constrained('')->restrictOnDelete('');
-            $table->foreignId('customer_id')->constrained('')->restrictOnDelete('');
-            $table->foreignId('reservation_id')->constrained('')->restrictOnDelete('');
+            $table->foreignId('bus_id')->constrained('buses')->restrictOnDelete('');
+            $table->foreignId('customer_id')->constrained('customers')->restrictOnDelete('');
+            $table->foreignId('ticket_reservation_id')->constrained('ticket_reservations')->restrictOnDelete('');
             $table->decimal('seat_number', 10, 2);
             $table->timestamps();
         });

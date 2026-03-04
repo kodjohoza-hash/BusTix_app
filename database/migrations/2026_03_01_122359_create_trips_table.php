@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('trips', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('displacement_id')->constrained('')->restrictOnDelete('');
-            $table->foreignId('bus_id')->constrained('')->restrictOnDelete('');
+            $table->foreignId('displacement_id')->constrained('displacements')->restrictOnDelete('');
+            $table->foreignId('bus_id')->constrained('buses')->restrictOnDelete('');
             $table->dateTime('living_date_time');
             $table->decimal('price');
             $table->string('trip_status');

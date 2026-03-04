@@ -8,4 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     use HasFactory;
+     protected $fillable = [
+        'name',
+        'surname',
+        'email',
+        'phone',
+        'password',
+        'id_card_number',
+    ];
+
+    // Define relationships
+    public function ticketReservations()
+    {
+        return $this->hasMany(\App\Models\Ticket_reservation::class);
+    }
 }

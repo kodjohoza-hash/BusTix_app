@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('reservation_id')->constrained('')->restrictOnDelete('');
+            $table->foreignId('ticket_reservation_id')->cascadeOnDelete('');
             $table->decimal('amount', 10, 2);
             $table->enum('payment_mode',['credit_card','orange money','mtn mobile money','cash'])->default('cash');
             $table->string('transaction_reference')->unique();
