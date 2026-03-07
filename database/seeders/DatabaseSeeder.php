@@ -2,21 +2,30 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+/**
+ * DatabaseSeeder - Seeder principal de BusTix
+ * 
+ * Appelle tous les seeders dans le bon ordre
+ * pour respecter les dépendances entre les tables.
+ */
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        $this->command->info('🚀 Démarrage du seeding de BusTix...');
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $this->call([
+            RoleSeeder::class,       // 1. Rôles en premier
+            PermissionSeeder::class, // 2. Permissions + assignation aux rôles
+            UserSeeder::class,       // 3. Utilisateurs (dépend des rôles)
+            CustomerSeeder::class,   // 4. Clients (dépend des users)
+            BusSeeder::class,        // 5. Bus + sièges
+            DisplacementSeeder::class, // 6. Trajets (dépend des bus)
+            TripSeeder::class,       // 7. Voyages (dépend des trajets)
+        ]);
+
+        $this->command->info('🎉 Seeding terminé avec succès !');
     }
 }
