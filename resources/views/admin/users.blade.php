@@ -1,150 +1,231 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'Gérer les Utilisateurs')
+@section('title', 'Gestion des Clients')
+@section('subtitle', 'Gérez tous les clients BusTix')
 
 @section('content')
-<!-- Header -->
-<div class="bg-gradient py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h1 class="mb-2"><i class="fas fa-users me-2"></i>Gestion des Utilisateurs</h1>
-                <p class="text-light">Gérez les comptes utilisateurs</p>
-            </div>
-            <a href="#" class="btn btn-light btn-lg rounded-pill">
-                <i class="fas fa-plus me-2"></i>Ajouter Utilisateur
-            </a>
+
+<!-- ===== ALERTES ===== -->
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4" role="alert">
+        <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
+
+<!-- ===== STATISTIQUES ===== -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card blue">
+            <div class="stat-number">{{ $totalCustomers }}</div>
+            <div class="stat-label"><i class="fas fa-users me-1"></i>Total Clients</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card green">
+            <div class="stat-number">{{ $activeCustomers }}</div>
+            <div class="stat-label"><i class="fas fa-user-check me-1"></i>Comptes Actifs</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card orange">
+            <div class="stat-number">{{ $totalCustomers - $activeCustomers }}</div>
+            <div class="stat-label"><i class="fas fa-user-times me-1"></i>Comptes Désactivés</div>
         </div>
     </div>
 </div>
 
-<div class="container py-5">
-    <!-- Filters -->
-    <div class="row mb-4 g-3">
-        <div class="col-md-3">
-            <input type="text" class="form-control form-control-lg rounded-pill" placeholder="Nom...">
-        </div>
-        <div class="col-md-3">
-            <input type="text" class="form-control form-control-lg rounded-pill" placeholder="Email...">
-        </div>
-        <div class="col-md-2">
-            <select class="form-select form-select-lg rounded-pill">
-                <option>Tous les rôles</option>
-                <option>Admin</option>
-                <option>Utilisateur</option>
-                <option>Support</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <button class="btn btn-primary btn-lg w-100 rounded-pill">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
+<!-- ===== HEADER ===== -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h5 class="fw-bold mb-1">
+            <i class="fas fa-users text-primary me-2"></i>Tous les Clients
+        </h5>
+        <small class="text-muted">{{ $totalCustomers }} client(s) enregistré(s)</small>
     </div>
+</div>
 
-    <!-- Stats -->
-    <div class="row g-3 mb-5">
-        <div class="col-md-4">
-            <div class="stat-box p-3 bg-light rounded-3xl text-center">
-                <h5 class="fw-bold mb-1">{{ 1234 }}</h5>
-                <small class="text-muted">Utilisateurs totaux</small>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="stat-box p-3 bg-light rounded-3xl text-center">
-                <h5 class="fw-bold mb-1 text-success">{{ 1150 }}</h5>
-                <small class="text-muted">Actifs</small>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="stat-box p-3 bg-light rounded-3xl text-center">
-                <h5 class="fw-bold mb-1 text-warning">{{ 84 }}</h5>
-                <small class="text-muted">Inactifs</small>
-            </div>
-        </div>
-    </div>
-
-    <!-- Users Table -->
-    <div class="card border-0 shadow-sm rounded-3xl overflow-hidden">
+<!-- ===== LISTE DES CLIENTS ===== -->
+<div class="card table-card">
+    <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
                     <tr>
-                        <th>Utilisateur</th>
-                        <th>Email</th>
+                        <th class="ps-4">#</th>
+                        <th>Client</th>
                         <th>Téléphone</th>
-                        <th>Rôle</th>
                         <th>Réservations</th>
-                        <th>Inscription</th>
-                        <th>Statut</th>
-                        <th>Actions</th>
+                        <th>Membre depuis</th>
+                        <th>Statut Compte</th>
+                        <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for($i = 1; $i <= 10; $i++)
+                    @forelse($customers as $customer)
                     <tr>
+                        <td class="ps-4 text-muted">{{ $loop->iteration }}</td>
+
+                        <!-- Client -->
                         <td>
                             <div class="d-flex align-items-center">
-                                <img src="https://via.placeholder.com/40/667eea/ffffff?text={{ $i }}" class="rounded-circle me-2" alt="Avatar" width="40" height="40">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center me-3
+                                            {{ $customer->user && $customer->user->actif ? 'bg-primary' : 'bg-secondary' }}
+                                            bg-opacity-10 text-primary fw-bold"
+                                     style="width:40px;height:40px;font-size:16px;">
+                                    {{ strtoupper(substr($customer->name, 0, 1)) }}
+                                </div>
                                 <div>
-                                    <p class="mb-0 fw-bold">Utilisateur {{ $i }}</p>
-                                    <small class="text-muted">ID: #{{ 1000 + $i }}</small>
+                                    <div class="fw-bold">
+                                        {{ $customer->name }} {{ $customer->surname }}
+                                    </div>
+                                    <small class="text-muted">{{ $customer->email }}</small>
                                 </div>
                             </div>
                         </td>
-                        <td>user{{ $i }}@email.com</td>
-                        <td>+33 6 {{ str_pad(rand(0, 999999), 8, '0', STR_PAD_LEFT) }}</td>
+
+                        <!-- Téléphone -->
                         <td>
-                            @if($i == 1)
-                                <span class="badge bg-danger">Admin</span>
-                            @elseif($i % 5 == 0)
-                                <span class="badge bg-info">Support</span>
+                            <i class="fas fa-phone text-muted me-1 small"></i>
+                            {{ $customer->telephone ?? '-' }}
+                        </td>
+
+                        <!-- Réservations -->
+                        <td>
+                            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
+                                <i class="fas fa-ticket-alt me-1"></i>
+                                {{ $customer->ticket_reservations_count }} réservation(s)
+                            </span>
+                        </td>
+
+                        <!-- Membre depuis -->
+                        <td>
+                            @if($customer->user)
+                                <div>{{ \Carbon\Carbon::parse($customer->user->created_at)->format('d/m/Y') }}</div>
+                                <small class="text-muted">
+                                    {{ \Carbon\Carbon::parse($customer->user->created_at)->diffForHumans() }}
+                                </small>
                             @else
-                                <span class="badge bg-primary">Utilisateur</span>
+                                <span class="text-muted">-</span>
                             @endif
                         </td>
-                        <td class="fw-bold">{{ $i * 3 }}</td>
-                        <td>{{ now()->subDays(rand(1, 365))->format('d/m/Y') }}</td>
+
+                        <!-- Statut -->
                         <td>
-                            @if($i % 10 != 0)
-                                <span class="badge bg-success">Actif</span>
+                            @if($customer->user && $customer->user->actif)
+                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
+                                    <i class="fas fa-check-circle me-1"></i>Actif
+                                </span>
                             @else
-                                <span class="badge bg-secondary">Inactif</span>
+                                <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill">
+                                    <i class="fas fa-times-circle me-1"></i>Désactivé
+                                </span>
                             @endif
                         </td>
-                        <td>
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-sm btn-outline-primary rounded-start-pill">
-                                    <i class="fas fa-edit"></i>
+
+                        <!-- Actions -->
+                        <td class="text-center">
+                            <!-- Activer/Désactiver -->
+                            <form method="POST"
+                                  action="{{ route('admin.users.toggle', $customer->id) }}"
+                                  class="d-inline">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit"
+                                        class="btn btn-sm rounded-pill me-1
+                                               {{ $customer->user && $customer->user->actif
+                                                  ? 'btn-outline-warning'
+                                                  : 'btn-outline-success' }}"
+                                        title="{{ $customer->user && $customer->user->actif ? 'Désactiver' : 'Activer' }}">
+                                    <i class="fas {{ $customer->user && $customer->user->actif ? 'fa-ban' : 'fa-check' }}"></i>
                                 </button>
-                                <button type="button" class="btn btn-sm btn-outline-info rounded-pill mx-1">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-danger rounded-end-pill">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
+                            </form>
+
+                            <!-- Supprimer -->
+                            <button class="btn btn-sm btn-outline-danger rounded-pill"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteClientModal"
+                                    data-id="{{ $customer->id }}"
+                                    data-name="{{ $customer->name }} {{ $customer->surname }}">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </td>
                     </tr>
-                    @endfor
+                    @empty
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-5">
+                            <i class="fas fa-users fa-3x mb-3 d-block opacity-25"></i>
+                            Aucun client enregistré pour le moment
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
-    </div>
 
-    <!-- Pagination -->
-    <div class="d-flex justify-content-center mt-5">
-        <nav aria-label="Page navigation">
-            <ul class="pagination">
-                <li class="page-item disabled"><a class="page-link rounded-pill" href="#">Précédent</a></li>
-                <li class="page-item active"><a class="page-link rounded-pill" href="#">1</a></li>
-                <li class="page-item"><a class="page-link rounded-pill" href="#">2</a></li>
-                <li class="page-item"><a class="page-link rounded-pill" href="#">3</a></li>
-                <li class="page-item"><a class="page-link rounded-pill" href="#">4</a></li>
-                <li class="page-item"><a class="page-link rounded-pill" href="#">5</a></li>
-                <li class="page-item"><a class="page-link rounded-pill" href="#">Suivant</a></li>
-            </ul>
-        </nav>
+        <!-- Pagination -->
+        @if($customers->hasPages())
+        <div class="px-4 py-3 border-top">
+            {{ $customers->links() }}
+        </div>
+        @endif
     </div>
 </div>
+
+<!-- ===== MODAL SUPPRIMER CLIENT ===== -->
+<div class="modal fade" id="deleteClientModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold text-danger">
+                    <i class="fas fa-trash me-2"></i>Supprimer le Client
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="fas fa-exclamation-triangle text-warning fa-3x mb-3"></i>
+                <p class="mb-1">Voulez-vous vraiment supprimer le client</p>
+                <p class="fw-bold text-primary fs-5" id="delete_client_name"></p>
+                <small class="text-muted">
+                    Son compte utilisateur sera aussi supprimé !
+                </small>
+            </div>
+            <form method="POST" id="deleteClientForm">
+                @csrf
+                @method('DELETE')
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button"
+                            class="btn btn-light rounded-pill px-4"
+                            data-bs-dismiss="modal">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn btn-danger rounded-pill px-4">
+                        <i class="fas fa-trash me-2"></i>Supprimer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
+
+@push('scripts')
+<script>
+    // ===== MODAL SUPPRIMER =====
+    document.getElementById('deleteClientModal').addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const id     = button.getAttribute('data-id');
+        const name   = button.getAttribute('data-name');
+
+        document.getElementById('deleteClientForm').action = '/admin/users/' + id;
+        document.getElementById('delete_client_name').textContent = name;
+    });
+</script>
+@endpush

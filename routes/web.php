@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\BusController as AdminBusController;
+use App\Http\Controllers\Admin\ReservationController as AdminReservationController;
+use App\Http\Controllers\Admin\VoyageController as AdminVoyageController;
+use App\Http\Controllers\Admin\ClientController as AdminClientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -10,14 +13,13 @@ use App\Http\Controllers\Admin\BusController as AdminBusController;
 |--------------------------------------------------------------------------
 */
 
-// Redirection vers login
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
 /*
 |--------------------------------------------------------------------------
-| Routes Admin - Protégées par auth + middleware admin
+| Routes Admin
 |--------------------------------------------------------------------------
 */
 Route::prefix('admin')
@@ -25,58 +27,46 @@ Route::prefix('admin')
      ->name('admin.')
      ->group(function () {
 
-    // Tableau de bord
-    Route::get('dashboard', [DashboardController::class, 'index'])
-         ->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Gestion des Bus
+    // Bus
     Route::get('bus', [AdminBusController::class, 'index'])->name('bus');
     Route::post('bus', [AdminBusController::class, 'store'])->name('bus.store');
     Route::put('bus/{id}', [AdminBusController::class, 'update'])->name('bus.update');
     Route::delete('bus/{id}', [AdminBusController::class, 'destroy'])->name('bus.destroy');
 
-    // Pages à développer
-    Route::get('voyages', function () {
-        return view('admin.voyages');
-    })->name('voyages');
+    // Voyages
+    Route::get('voyages', [AdminVoyageController::class, 'index'])->name('voyages');
+    Route::post('voyages', [AdminVoyageController::class, 'store'])->name('voyages.store');
+    Route::put('voyages/{id}', [AdminVoyageController::class, 'update'])->name('voyages.update');
+    Route::delete('voyages/{id}', [AdminVoyageController::class, 'destroy'])->name('voyages.destroy');
 
-    Route::get('users', function () {
-        return view('admin.users');
-    })->name('users');
+    // Réservations
+    Route::get('reservations', [AdminReservationController::class, 'index'])->name('reservations');
+    Route::put('reservations/{id}/status', [AdminReservationController::class, 'updateStatus'])->name('reservations.status');
+    Route::delete('reservations/{id}', [AdminReservationController::class, 'destroy'])->name('reservations.destroy');
 
-    Route::get('reservations', function () {
-        return view('admin.reservations');
-    })->name('reservations');
+    // Clients
+    Route::get('users', [AdminClientController::class, 'index'])->name('users');
+    Route::put('users/{id}/toggle', [AdminClientController::class, 'toggleStatus'])->name('users.toggle');
+    Route::delete('users/{id}', [AdminClientController::class, 'destroy'])->name('users.destroy');
 });
 
 /*
 |--------------------------------------------------------------------------
-| Routes Client - Pages publiques
+| Routes Client
 |--------------------------------------------------------------------------
 */
-Route::get('/home', function () {
-    return view('pages.home');
-})->name('home');
-
-Route::get('/voyages', function () {
-    return view('pages.voyages');
-})->name('voyages');
-
-Route::get('/search', function () {
-    return view('pages.search');
-})->name('search');
-
-Route::get('/reservations', function () {
-    return view('pages.reservations');
-})->middleware('auth')->name('reservations');
-
-Route::get('/profile', function () {
-    return view('pages.profil');
-})->middleware('auth')->name('profile');
+Route::get('/home', function () { return view('pages.home'); })->name('home');
+Route::get('/voyages', function () { return view('pages.voyages'); })->name('voyages');
+Route::get('/search', function () { return view('pages.search'); })->name('search');
+Route::get('/details/{id}', function ($id) { return view('pages.detail'); })->name('details');
+Route::get('/reservations', function () { return view('pages.reservations'); })->middleware('auth')->name('reservations');
+Route::get('/profile', function () { return view('pages.profil'); })->middleware('auth')->name('profile');
 
 /*
 |--------------------------------------------------------------------------
-| Routes Auth - Générées par Laravel UI
+| Auth
 |--------------------------------------------------------------------------
 */
 Auth::routes();

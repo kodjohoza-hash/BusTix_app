@@ -276,5 +276,132 @@
         </div>
     </div>
 </div>
-
+<!-- ===== GRAPHIQUES ===== -->
+<div class="row g-4 mt-2 mb-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm rounded-3 p-4">
+            <h6 class="fw-bold mb-3">
+                <i class="fas fa-chart-bar text-primary me-2"></i>
+                Réservations des 6 derniers mois
+            </h6>
+            <div style="height:200px"><canvas id="reservationsChart"></canvas></div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm rounded-3 p-4">
+            <h6 class="fw-bold mb-3">
+                <i class="fas fa-chart-bar text-success me-2"></i>
+                Revenus des 6 derniers mois (FCFA)
+            </h6>
+            <div style="height:200px"><canvas id="revenusChart"></canvas></div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm rounded-3 p-4">
+            <h6 class="fw-bold mb-3">
+                <i class="fas fa-chart-pie text-warning me-2"></i>
+                Réservations par Statut
+            </h6>
+            <div style="height:200px"><canvas id="statusChart"></canvas></div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm rounded-3 p-4">
+            <h6 class="fw-bold mb-3">
+                <i class="fas fa-chart-pie text-info me-2"></i>
+                Voyages par Trajet
+            </h6>
+           <div style="height:200px"><canvas id="trajetsChart"></canvas></div>
+        </div>
+    </div>
+</div>
 @endsection
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    new Chart(document.getElementById('reservationsChart'), {
+        type: 'bar',
+        data: {
+            labels: {!! json_encode($monthLabels) !!},
+            datasets: [{
+                label: 'Réservations',
+                data: {!! json_encode($reservationsPerMonth) !!},
+                backgroundColor: 'rgba(26, 35, 126, 0.7)',
+                borderColor: '#1a237e',
+                borderWidth: 2,
+                borderRadius: 8,
+            }]
+        },
+        options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom' } }
+}
+    });
+
+    new Chart(document.getElementById('revenusChart'), {
+        type: 'bar',
+        data: {
+            labels: {!! json_encode($monthLabels) !!},
+            datasets: [{
+                label: 'Revenus (FCFA)',
+                data: {!! json_encode($revenusPerMonth) !!},
+                backgroundColor: 'rgba(46, 125, 50, 0.7)',
+                borderColor: '#2e7d32',
+                borderWidth: 2,
+                borderRadius: 8,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    new Chart(document.getElementById('statusChart'), {
+        type: 'pie',
+        data: {
+            labels: ['En attente', 'Confirmées', 'Annulées'],
+            datasets: [{
+                data: {!! json_encode($statusData) !!},
+                backgroundColor: [
+                    'rgba(245, 124, 0, 0.8)',
+                    'rgba(46, 125, 50, 0.8)',
+                    'rgba(198, 40, 40, 0.8)',
+                ],
+                borderColor: ['#f57c00', '#2e7d32', '#c62828'],
+                borderWidth: 2,
+            }]
+        },
+   options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom' } }
+}
+    });
+
+    new Chart(document.getElementById('trajetsChart'), {
+        type: 'pie',
+        data: {
+            labels: {!! json_encode($displacementLabels) !!},
+            datasets: [{
+                data: {!! json_encode($displacementData) !!},
+                backgroundColor: [
+                    'rgba(26, 35, 126, 0.8)',
+                    'rgba(13, 71, 161, 0.8)',
+                    'rgba(21, 101, 192, 0.8)',
+                    'rgba(25, 118, 210, 0.8)',
+                    'rgba(30, 136, 229, 0.8)',
+                ],
+                borderWidth: 2,
+            }]
+        },
+     options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom' } }
+}
+    });
+</script>
+@endpush
