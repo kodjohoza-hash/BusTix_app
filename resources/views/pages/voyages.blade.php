@@ -3,121 +3,143 @@
 @section('title', 'Tous les Voyages')
 
 @section('content')
-<!-- Header -->
-<div class="bg-gradient py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-    <div class="container">
-        <h1 class="mb-2"><i class="fas fa-road me-2"></i>Tous les Voyages</h1>
-        <p class="text-light">Découvrez notre catalogue complet de voyages en bus</p>
-    </div>
-</div>
 
-<!-- Filter Section -->
-<div class="container py-5">
-    <div class="row mb-5">
-        <div class="col-md-4">
-            <input type="text" class="form-control form-control-lg rounded-pill" placeholder="Départ...">
-        </div>
-        <div class="col-md-4">
-            <input type="text" class="form-control form-control-lg rounded-pill" placeholder="Destination...">
-        </div>
-        <div class="col-md-4">
-            <button class="btn btn-primary btn-lg w-100 rounded-pill">
-                <i class="fas fa-search me-2"></i>Rechercher
-            </button>
-        </div>
-    </div>
-
-    <!-- Tabs for Categories -->
-    <ul class="nav nav-pills justify-content-center mb-5" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active rounded-pill mx-2" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button">Tous</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link rounded-pill mx-2" id="morning-tab" data-bs-toggle="tab" data-bs-target="#morning" type="button">Matin</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link rounded-pill mx-2" id="afternoon-tab" data-bs-toggle="tab" data-bs-target="#afternoon" type="button">Après-midi</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link rounded-pill mx-2" id="evening-tab" data-bs-toggle="tab" data-bs-target="#evening" type="button">Soirée</button>
-        </li>
-    </ul>
-
-    <!-- Trips Grid -->
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="all" role="tabpanel">
-            <div class="row g-4">
-                @for($i = 1; $i <= 12; $i++)
-                <div class="col-md-6 col-lg-4">
-                    <div class="voyage-card card border-0 shadow-sm h-100 hover-effect transition-all rounded-3xl overflow-hidden">
-                        <img src="https://via.placeholder.com/400x250/667eea/ffffff?text=Voyage {{ $i }}" class="card-img-top" alt="Voyage">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold text-primary">{{ ['Douala - Yaoundé', 'Douala - Bamenda', 'Bamenda - Yaoundé', 'Buea - Douala', 'Douala - Ouest', 'Kumba - Bamenda', 'Yaoundé - Bamenda', 'Buea - Yaoundé', 'Limbe - Douala', 'Garoua - Yaoundé', 'Bafoussam - Douala', 'Ngaoundéré - Yaoundé'][$i - 1] }}</h5>
-                            <p class="text-muted mb-3">
-                                <i class="fas fa-calendar-alt me-2"></i>{{ now()->addDays($i)->format('d/m/Y') }}
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span><i class="fas fa-clock text-warning"></i> {{ (3 + ($i % 8)) }}h{{ (10 + ($i * 3)) % 60 }}m</span>
-                                <span class="badge bg-success">{{ 15 - $i }} places</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <strong class="h5 text-primary mb-0">{{ (8000 + ($i * 300)) }} FCFA</strong>
-                                <a href="{{ route('details', $i) }}" class="btn btn-primary btn-sm rounded-pill">
-                                    <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endfor
-            </div>
-        </div>
-
-        <div class="tab-pane fade" id="morning" role="tabpanel">
-            <div class="row g-4">
-                @for($i = 1; $i <= 4; $i++)
-                <div class="col-md-6 col-lg-4">
-                    <div class="voyage-card card border-0 shadow-sm h-100 hover-effect transition-all rounded-3xl overflow-hidden">
-                        <img src="https://via.placeholder.com/400x250/667eea/ffffff?text=Matin {{ $i }}" class="card-img-top" alt="Voyage">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold text-primary">Paris - Marseille</h5>
-                            <p class="text-muted mb-3">
-                                <i class="fas fa-calendar-alt me-2"></i>06:00 - 16:00
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span><i class="fas fa-clock text-warning"></i> 10h</span>
-                                <span class="badge bg-success">{{ 10 + $i }} places</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <strong class="h5 text-primary mb-0">45€</strong>
-                                <a href="{{ route('details', $i) }}" class="btn btn-primary btn-sm rounded-pill">
-                                    <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endfor
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Promo Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <h2 class="fw-bold mb-4">Offre Spéciale</h2>
-                <p class="lead text-muted mb-4">Obtenez jusqu'à 30% de réduction sur les voyages en groupe!</p>
-                <a href="#" class="btn btn-primary btn-lg rounded-pill">
-                    <i class="fas fa-gift me-2"></i>En Savoir Plus
-                </a>
-            </div>
-            <div class="col-md-6 text-center">
-                <img src="https://via.placeholder.com/400x300/764ba2/ffffff?text=Special%20Offer" class="img-fluid rounded-3xl" alt="Offer">
-            </div>
-        </div>
+<!-- ===== HEADER ===== -->
+<section style="background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%); color: white; padding: 60px 0;">
+    <div class="container text-center">
+        <h1 class="fw-bold mb-2">
+            <i class="fas fa-road me-2"></i>Tous les Voyages
+        </h1>
+        <p class="text-light mb-0">Trouvez le voyage qui vous convient</p>
     </div>
 </section>
+
+<!-- ===== RECHERCHE ===== -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <form action="{{ route('search') }}" method="GET" class="bg-white p-3 rounded-3 shadow-sm">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label fw-500">Départ</label>
+                    <input type="text" name="departure"
+                           class="form-control rounded-pill"
+                           placeholder="Ville de départ">
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label fw-500">Destination</label>
+                    <input type="text" name="destination"
+                           class="form-control rounded-pill"
+                           placeholder="Ville destination">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill">
+                        <i class="fas fa-search me-1"></i>Chercher
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- ===== LISTE VOYAGES ===== -->
+<section class="py-5">
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold mb-0">
+                {{ $trips->total() }} voyage(s) disponible(s)
+            </h5>
+        </div>
+
+        <div class="row g-4">
+            @forelse($trips as $trip)
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
+
+                    <!-- Header -->
+                    <div class="p-4 text-white"
+                         style="background: linear-gradient(135deg, #1a237e, #0d47a1);">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="fw-bold mb-1">
+                                    {{ $trip->displacement->start_point }}
+                                </h6>
+                                <i class="fas fa-arrow-down my-1 small"></i>
+                                <h6 class="fw-bold mb-0">
+                                    {{ $trip->displacement->destination_point }}
+                                </h6>
+                            </div>
+                            <span class="badge bg-white text-primary px-3 py-2 rounded-pill fw-bold">
+                                {{ number_format($trip->price, 0, ',', ' ') }} F
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <!-- Infos -->
+                        <div class="mb-3">
+                            <p class="text-muted small mb-1">
+                                <i class="fas fa-calendar me-2 text-primary"></i>
+                                {{ \Carbon\Carbon::parse($trip->living_date_time)->format('d/m/Y à H:i') }}
+                            </p>
+                            <p class="text-muted small mb-1">
+                                <i class="fas fa-bus me-2 text-primary"></i>
+                                {{ $trip->displacement->bus->mack ?? 'N/A' }}
+                                ({{ $trip->displacement->bus->bus_number ?? '' }})
+                            </p>
+                            <p class="text-muted small mb-0">
+                                <i class="fas fa-map-marker-alt me-2 text-primary"></i>
+                                {{ $trip->displacement->distance ?? '?' }} km
+                            </p>
+                        </div>
+
+                        <!-- Places disponibles -->
+                        @php
+                            $reserved  = $trip->ticketReservations()
+                                              ->where('status', '!=', 'annulée')
+                                              ->count();
+                            $available = $trip->displacement->bus->capacity - $reserved;
+                        @endphp
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge rounded-pill px-3 py-2
+                                {{ $available > 5 ? 'bg-success' : ($available > 0 ? 'bg-warning' : 'bg-danger') }}
+                                bg-opacity-10
+                                {{ $available > 5 ? 'text-success' : ($available > 0 ? 'text-warning' : 'text-danger') }}">
+                                <i class="fas fa-chair me-1"></i>
+                                {{ $available }} / {{ $trip->displacement->bus->capacity }} places
+                            </span>
+                        </div>
+
+                        @if($available > 0)
+                            <a href="{{ route('details', $trip->id) }}"
+                               class="btn btn-primary w-100 rounded-pill">
+                                <i class="fas fa-ticket-alt me-2"></i>Réserver
+                            </a>
+                        @else
+                            <button class="btn btn-secondary w-100 rounded-pill" disabled>
+                                <i class="fas fa-times me-2"></i>Complet
+                            </button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div class="col-12 text-center text-muted py-5">
+                <i class="fas fa-bus fa-3x mb-3 d-block opacity-25"></i>
+                Aucun voyage disponible pour le moment
+            </div>
+            @endforelse
+        </div>
+
+        <!-- Pagination -->
+        @if($trips->hasPages())
+        <div class="d-flex justify-content-center mt-5">
+            {{ $trips->links() }}
+        </div>
+        @endif
+
+    </div>
+</section>
+
 @endsection

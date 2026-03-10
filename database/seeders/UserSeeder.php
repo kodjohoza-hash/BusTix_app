@@ -1,5 +1,4 @@
 <?php
-
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -7,21 +6,14 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 
-/**
- * UserSeeder - Crée les utilisateurs de test
- * 
- * Insère un administrateur et quelques clients
- * de test dans l'application BusTix.
- */
 class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Récupère les rôles
         $adminRole  = Role::where('role_name', 'admin')->first();
         $clientRole = Role::where('role_name', 'client')->first();
 
-        // Création du compte Administrateur principal
+        // ===== SUPER ADMIN =====
         User::create([
             'role_id'      => $adminRole->id,
             'name'         => 'Super',
@@ -29,11 +21,25 @@ class UserSeeder extends Seeder
             'email'        => 'admin@bustix.com',
             'telephone'    => '6999999999',
             'password'     => Hash::make('admin123'),
-            'role'         => User::ROLE_ADMIN,
+            'role'         => 'admin',
+            'admin_type'   => 'super_admin',
             'actif'        => true,
         ]);
 
-        // Création de clients de test
+        // ===== ADMIN GUICHET =====
+        User::create([
+            'role_id'      => $adminRole->id,
+            'name'         => 'Guichet',
+            'user_surname' => 'Admin',
+            'email'        => 'guichet@bustix.com',
+            'telephone'    => '6988888888',
+            'password'     => Hash::make('guichet123'),
+            'role'         => 'admin',
+            'admin_type'   => 'guichet',
+            'actif'        => true,
+        ]);
+
+        // ===== CLIENTS =====
         $clients = [
             [
                 'name'         => 'Jean',
@@ -66,7 +72,8 @@ class UserSeeder extends Seeder
                 'email'        => $client['email'],
                 'telephone'    => $client['telephone'],
                 'password'     => $client['password'],
-                'role'         => User::ROLE_CLIENT,
+                'role'         => 'client',
+                'admin_type'   => null,
                 'actif'        => true,
             ]);
         }

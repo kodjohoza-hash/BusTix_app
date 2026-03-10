@@ -10,33 +10,23 @@ class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
-    /**
-     * Redirection après connexion selon le rôle
-     */
-    protected function redirectTo()
-    {
-        return '/home';
-    }
+    protected $redirectTo = '/home';
 
-    /**
-     * Constructeur - accessible uniquement aux invités
-     */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
     }
 
-    /**
-     * Redirection personnalisée selon le rôle après connexion
-     */
     protected function authenticated(Request $request, $user)
     {
-        // Si l'utilisateur est admin → Dashboard Admin
-        if ($user->isAdmin()) {
+        if ($user->isSuperAdmin()) {
             return redirect()->route('admin.dashboard');
         }
 
-        // Si l'utilisateur est client → Page d'accueil
-        return redirect('/home');
+        if ($user->isGuichet()) {
+            return redirect()->route('guichet.dashboard');
+        }
+
+        return redirect()->route('home');
     }
 }

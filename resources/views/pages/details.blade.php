@@ -1,168 +1,226 @@
 @extends('layouts.app')
 
-@section('title', 'Détails du Voyage')
+@section('title', 'Détail du Voyage')
 
 @section('content')
-<!-- Breadcrumb -->
-<div class="container py-3">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('home') }}">Accueil</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('voyages') }}">Voyages</a></li>
-            <li class="breadcrumb-item active">Détails</li>
-        </ol>
-    </nav>
-</div>
 
-<div class="container py-5">
-    <div class="row">
-        <!-- Main Content -->
-        <div class="col-lg-8">
-            <!-- Trip Header -->
-            <div class="card border-0 shadow-sm rounded-3xl overflow-hidden mb-4">
-                <img src="https://via.placeholder.com/800x400/667eea/ffffff?text=Trip+Details" class="card-img-top" alt="Trip">
-                <div class="card-body p-5">
-                    <h1 class="fw-bold mb-4 text-primary">Douala - Yaoundé</h1>
-                    
-                    <!-- Trip Info Grid -->
-                    <div class="row g-4 mb-5">
-                        <div class="col-md-3">
-                            <div class="info-box p-4 bg-light rounded-3xl text-center">
-                                <p class="text-muted mb-2">Départ</p>
-                                <h5 class="fw-bold">10:30</h5>
-                                <small class="text-muted">Paris (Bercy)</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="info-box p-4 bg-light rounded-3xl text-center">
-                                <p class="text-muted mb-2">Durée</p>
-                                <h5 class="fw-bold">4h 30m</h5>
-                                <small class="text-muted"></small>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="info-box p-4 bg-light rounded-3xl text-center">
-                                <p class="text-muted mb-2">Arrivée</p>
-                                <h5 class="fw-bold">14:00</h5>
-                                <small class="text-muted">Yaoundé (Pk10)</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="info-box p-4 bg-light rounded-3xl text-center">
-                                <p class="text-muted mb-2">Places</p>
-                                <h5 class="fw-bold text-success">8</h5>
-                                <small class="text-muted">Disponibles</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bus Details -->
-                    <h4 class="fw-bold mb-4">Détails du Bus</h4>
-                    <div class="bus-details bg-light p-4 rounded-3xl mb-4">
-                        <div class="row align-items-center">
-                            <div class="col-md-3">
-                                <img src="https://via.placeholder.com/200/764ba2/ffffff?text=Cameroun+Transit" class="img-fluid rounded-2xl" alt="Bus">
-                            </div>
-                            <div class="col-md-9">
-                                <h5 class="fw-bold mb-3">Cameroun Transit - Confort</h5>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><i class="fas fa-check-circle text-success me-2"></i>WiFi Gratuit</p>
-                                        <p><i class="fas fa-check-circle text-success me-2"></i>Toilettes</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><i class="fas fa-check-circle text-success me-2"></i>Climatisation</p>
-                                        <p><i class="fas fa-check-circle text-success me-2"></i>Prises USB</p>
-                                    </div>
-                                </div>
-                                <div class="rating mt-3">
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star-half-alt text-warning"></i>
-                                    <span class="ms-2 fw-bold">4.5/5</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Seat Selection -->
-                    <h4 class="fw-bold mb-4">Sélectionner vos Places</h4>
-                    <div class="seat-selector bg-light p-5 rounded-3xl">
-                        <div class="text-center mb-4">
-                            <small class="text-muted">Conducateur</small>
-                            <div class="bg-white border py-1 mt-2" style="height: 40px;"></div>
-                        </div>
-                        
-                        <div class="row g-2 justify-content-center">
-                            @for($i = 1; $i <= 32; $i++)
-                            <div class="col-3 col-md-2">
-                                <input type="checkbox" id="seat{{ $i }}" class="btn-check" value="seat{{ $i }}">
-                                <label for="seat{{ $i }}" class="btn btn-outline-primary w-100 rounded-pill py-2" style="font-size: 0.8rem;">
-                                    {{ $i }}
-                                </label>
-                            </div>
-                            @endfor
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sidebar -->
-        <div class="col-lg-4">
-            <!-- Price Box -->
-            <div class="card border-0 shadow-lg rounded-3xl sticky-top p-4 mb-4" style="top: 20px;">
-                <h4 class="fw-bold mb-4">Résumé du Voyage</h4>
-                
-                <div class="mb-4">
-                    <p class="text-muted mb-2">Douala - Yaoundé</p>
-                    <h5 class="fw-bold">5 Mars 2026</h5>
-                </div>
-
-                <div class="mb-4 pb-4 border-bottom">
-                    <p class="text-muted mb-2">Places sélectionnées</p>
-                    <div id="selected-seats" class="mb-2">
-                        <span class="badge bg-primary">Aucune place</span>
-                    </div>
-                </div>
-
-                <div class="price-breakdown mb-4">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>1x Voyage</span>
-                        <span>8 500 FCFA</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
-                        <span>Assurance (optionnel)</span>
-                        <input type="checkbox" class="form-check-input" value="1000">
-                        <span>+1 000 FCFA</span>
-                    </div>
-                    <div class="d-flex justify-content-between fw-bold h5 mb-4">
-                        <span>Total:</span>
-                        <span class="text-primary" id="total-price">8 500 FCFA</span>
-                    </div>
-                </div>
-
-                <a href="{{ route('reservation', ['trip' => 1]) }}" class="btn btn-primary btn-lg w-100 rounded-pill mb-3">
-                    <i class="fas fa-arrow-right me-2"></i>Continuer
+<!-- ===== HEADER ===== -->
+<section style="background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%); color: white; padding: 60px 0;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+                <a href="{{ route('voyages') }}" class="btn btn-outline-light btn-sm rounded-pill mb-3">
+                    <i class="fas fa-arrow-left me-1"></i>Retour
                 </a>
-                <button class="btn btn-outline-primary btn-lg w-100 rounded-pill">
-                    <i class="fas fa-heart me-2"></i>Ajouter aux favoris
-                </button>
+                <h1 class="fw-bold mb-1">
+                    {{ $trip->displacement->start_point }}
+                    <i class="fas fa-arrow-right mx-2"></i>
+                    {{ $trip->displacement->destination_point }}
+                </h1>
+                <p class="text-light mb-0">
+                    <i class="fas fa-calendar me-2"></i>
+                    {{ \Carbon\Carbon::parse($trip->living_date_time)->format('d/m/Y à H:i') }}
+                </p>
             </div>
-
-            <!-- Info Box -->
-            <div class="card border-0 shadow-sm rounded-3xl p-4">
-                <h6 class="fw-bold mb-3"><i class="fas fa-info-circle text-primary me-2"></i>Informations Importants</h6>
-                <ul class="list-unstyled small text-muted">
-                    <li class="mb-2">Arrivée à l'heure ou remboursement</li>
-                    <li class="mb-2">Annulation gratuite jusqu'à 24h avant</li>
-                    <li class="mb-2">Politique bagage flexible</li>
-                    <li>Support client 24/7</li>
-                </ul>
+            <div class="col-auto">
+                <div class="text-center">
+                    <div class="display-5 fw-bold">
+                        {{ number_format($trip->price, 0, ',', ' ') }}
+                    </div>
+                    <small>FCFA / personne</small>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- ===== CONTENU ===== -->
+<section class="py-5">
+    <div class="container">
+
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4">
+                <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4">
+                <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        <div class="row g-4">
+
+            <!-- ===== INFOS VOYAGE ===== -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-3 mb-4">
+                    <div class="card-header bg-white border-0 pt-4 px-4">
+                        <h5 class="fw-bold">
+                            <i class="fas fa-info-circle text-primary me-2"></i>
+                            Infos du Voyage
+                        </h5>
+                    </div>
+                    <div class="card-body px-4">
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <small class="text-muted d-block">Départ</small>
+                                <span class="fw-bold">{{ $trip->displacement->start_point }}</span>
+                            </li>
+                            <li class="mb-3">
+                                <small class="text-muted d-block">Destination</small>
+                                <span class="fw-bold">{{ $trip->displacement->destination_point }}</span>
+                            </li>
+                            <li class="mb-3">
+                                <small class="text-muted d-block">Date & Heure</small>
+                                <span class="fw-bold">
+                                    {{ \Carbon\Carbon::parse($trip->living_date_time)->format('d/m/Y à H:i') }}
+                                </span>
+                            </li>
+                            <li class="mb-3">
+                                <small class="text-muted d-block">Bus</small>
+                                <span class="fw-bold">
+                                    {{ $trip->displacement->bus->mack }}
+                                    ({{ $trip->displacement->bus->bus_number }})
+                                </span>
+                            </li>
+                            <li class="mb-3">
+                                <small class="text-muted d-block">Distance</small>
+                                <span class="fw-bold">{{ $trip->displacement->distance ?? '?' }} km</span>
+                            </li>
+                            <li class="mb-3">
+                                <small class="text-muted d-block">Prix</small>
+                                <span class="fw-bold text-primary fs-5">
+                                    {{ number_format($trip->price, 0, ',', ' ') }} FCFA
+                                </span>
+                            </li>
+                            <li>
+                                <small class="text-muted d-block">Places disponibles</small>
+                                @php
+                                    $available = $trip->displacement->bus->capacity - count($reservedSeats);
+                                @endphp
+                                <span class="badge rounded-pill px-3 py-2
+                                    {{ $available > 5 ? 'bg-success' : ($available > 0 ? 'bg-warning' : 'bg-danger') }}">
+                                    {{ $available }} / {{ $trip->displacement->bus->capacity }}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SIÈGES ===== -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-header bg-white border-0 pt-4 px-4">
+                        <h5 class="fw-bold">
+                            <i class="fas fa-chair text-primary me-2"></i>
+                            Choisissez votre Siège
+                        </h5>
+                        <!-- Légende -->
+                        <div class="d-flex gap-3 mt-2">
+                            <small>
+                                <span class="badge bg-success me-1">■</span>Disponible
+                            </small>
+                            <small>
+                                <span class="badge bg-danger me-1">■</span>Réservé
+                            </small>
+                            <small>
+                                <span class="badge bg-primary me-1">■</span>Sélectionné
+                            </small>
+                        </div>
+                    </div>
+                    <div class="card-body px-4">
+
+                        @auth
+                        <form method="POST" action="{{ route('client.reservations.store') }}" id="reservationForm">
+                            @csrf
+                            <input type="hidden" name="trip_id" value="{{ $trip->id }}">
+                            <input type="hidden" name="seat_id" id="selected_seat_id" value="">
+
+                            <!-- Grille des sièges -->
+                            <div class="row g-2 mb-4">
+                                @foreach($trip->displacement->bus->seats as $seat)
+                                @php
+                                    $isReserved = in_array($seat->id, $reservedSeats);
+                                @endphp
+                                <div class="col-2 col-md-1">
+                                    <button type="button"
+                                            class="btn w-100 rounded-2 seat-btn p-2
+                                                {{ $isReserved ? 'btn-danger disabled' : 'btn-success' }}"
+                                            data-seat-id="{{ $seat->id }}"
+                                            data-seat-number="{{ $seat->seat_number }}"
+                                            {{ $isReserved ? 'disabled' : '' }}
+                                            title="{{ $seat->seat_number }}">
+                                        <i class="fas fa-chair d-block"></i>
+                                        <small style="font-size:10px">{{ $seat->seat_number }}</small>
+                                    </button>
+                                </div>
+                                @endforeach
+                            </div>
+
+                            <!-- Siège sélectionné -->
+                            <div id="selectedSeatInfo" class="alert alert-primary d-none mb-3">
+                                <i class="fas fa-check-circle me-2"></i>
+                                Siège sélectionné : <strong id="selectedSeatNumber"></strong>
+                            </div>
+
+                            <!-- Bouton réserver -->
+                            <button type="submit"
+                                    id="reserveBtn"
+                                    class="btn btn-primary btn-lg w-100 rounded-pill"
+                                    disabled>
+                                <i class="fas fa-ticket-alt me-2"></i>
+                                Réserver ce siège — {{ number_format($trip->price, 0, ',', ' ') }} FCFA
+                            </button>
+                        </form>
+                        @else
+                        <div class="text-center py-5">
+                            <i class="fas fa-lock fa-3x text-muted mb-3"></i>
+                            <p class="text-muted mb-3">Connectez-vous pour réserver un siège</p>
+                            <a href="{{ route('login') }}" class="btn btn-primary rounded-pill px-5">
+                                <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+                            </a>
+                        </div>
+                        @endauth
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
 @endsection
+
+@push('scripts')
+<script>
+    // Sélection de siège
+    document.querySelectorAll('.seat-btn:not(.disabled)').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            // Désélectionne tous
+            document.querySelectorAll('.seat-btn').forEach(function(b) {
+                if (!b.classList.contains('btn-danger')) {
+                    b.classList.remove('btn-primary');
+                    b.classList.add('btn-success');
+                }
+            });
+
+            // Sélectionne celui-ci
+            this.classList.remove('btn-success');
+            this.classList.add('btn-primary');
+
+            // Met à jour le formulaire
+            const seatId     = this.getAttribute('data-seat-id');
+            const seatNumber = this.getAttribute('data-seat-number');
+
+            document.getElementById('selected_seat_id').value = seatId;
+            document.getElementById('selectedSeatNumber').textContent = seatNumber;
+            document.getElementById('selectedSeatInfo').classList.remove('d-none');
+            document.getElementById('reserveBtn').removeAttribute('disabled');
+        });
+    });
+</script>
+@endpush

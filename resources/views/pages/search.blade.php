@@ -1,123 +1,164 @@
 @extends('layouts.app')
 
-@section('title', 'Rechercher')
+@section('title', 'Recherche')
 
 @section('content')
-<!-- Header -->
-<div class="bg-gradient py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-    <div class="container">
-        <h1 class="mb-2"><i class="fas fa-search me-2"></i>Rechercher un Voyage</h1>
-        <p class="text-light">Trouvez le voyage parfait selon vos critères</p>
-    </div>
-</div>
 
-<!-- Search Section -->
-<div class="container py-5">
-    <div class="row">
-        <!-- Filters Sidebar -->
-        <div class="col-lg-3 mb-4">
-            <div class="bg-light p-4 rounded-3xl sticky-top">
-                <h5 class="fw-bold mb-4">Filtres</h5>
-                
-                <!-- Date Filter -->
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Date de Départ</label>
-                    <input type="date" class="form-control rounded-pill" name="date">
-                </div>
-                
-                <!-- Price Filter -->
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Budget (FCFA)</label>
-                    <input type="range" class="form-range" min="0" max="50000" value="25000">
-                    <small class="text-muted">0 FCFA - 50 000 FCFA</small>
-                </div>
-                
-                <!-- Duration Filter -->
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Durée Maximale</label>
-                    <select class="form-select rounded-pill">
-                        <option>Toutes les durées</option>
-                        <option>Moins de 4h</option>
-                        <option>4h - 8h</option>
-                        <option>Plus de 8h</option>
-                    </select>
-                </div>
-                
-                <!-- Departure Time -->
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Heure de Départ</label>
-                    <select class="form-select rounded-pill">
-                        <option>Toutes les heures</option>
-                        <option>Matin (6h - 12h)</option>
-                        <option>Après-midi (12h - 18h)</option>
-                        <option>Soirée (18h - 00h)</option>
-                    </select>
-                </div>
-                
-                <button class="btn btn-primary w-100 rounded-pill">Appliquer Filtres</button>
-            </div>
-        </div>
-        
-        <!-- Results Section -->
-        <div class="col-lg-9">
-            <!-- Search Bar -->
-            <form action="{{ route('search') }}" method="GET" class="mb-4">
-                <div class="input-group input-group-lg mb-4">
-                    <input type="text" name="query" class="form-control rounded-start-pill" placeholder="Chercher un voyage...">
-                    <button class="btn btn-primary rounded-end-pill" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </form>
-            
-            <!-- Results Count -->
-            <div class="mb-4">
-                <p class="text-muted">Affichage de <strong>12 résultats</strong></p>
-            </div>
-            
-                    @for($i = 1; $i <= 6; $i++)
-                    <div class="card mb-3 shadow-sm hover-effect transition-all border-0 rounded-3xl">
-                        <div class="card-body p-4">
-                            <div class="row align-items-center">
-                                <div class="col-md-3">
-                                    <h5 class="card-title fw-bold mb-2">{{ ['Douala - Yaoundé', 'Douala - Bamenda', 'Bamenda - Yaoundé', 'Buea - Douala', 'Douala - Ouest', 'Kumba - Bamenda'][$i - 1] }}</h5>
-                                    <p class="text-muted mb-0"><i class="fas fa-calendar"></i> 5 Mars 2026</p>
-                                    <p class="text-muted"><i class="fas fa-clock"></i> {{ (8 + $i) }}:30 - {{ (13 + $i) }}:00</p>
-                                </div>
-                                <div class="col-md-3">
-                                    <p class="mb-2"><strong class="text-primary">Durée:</strong> {{ (3 + ($i % 8)) }}h{{ (10 + ($i * 3)) % 60 }}m</p>
-                                    <p class="mb-0"><strong class="text-primary">Bus:</strong> Cameroun Transit</p>
-                                </div>
-                                <div class="col-md-3">
-                                    <p class="text-muted mb-2">Places disponibles: <span class="badge bg-success">{{ 8 + $i }}</span></p>
-                                    <p class="text-muted mb-0">Confort: <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i></p>
-                                </div>
-                                <div class="col-md-3 text-md-end">
-                                    <h4 class="text-primary fw-bold mb-3">{{ (8000 + ($i * 1000)) }} FCFA</h4>
-                                    <a href="{{ route('details', $i) }}" class="btn btn-primary rounded-pill">
-                                        Sélectionner
-                                    </a>
-                                </div>
-                            </div>
+<!-- ===== HEADER ===== -->
+<section style="background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%); color: white; padding: 60px 0;">
+    <div class="container">
+        <h1 class="fw-bold text-center mb-4">
+            <i class="fas fa-search me-2"></i>Rechercher un Voyage
+        </h1>
+        <!-- Formulaire de recherche -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <form action="{{ route('search') }}" method="GET"
+                      class="bg-white p-4 rounded-3 shadow">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-5">
+                            <label class="form-label fw-bold text-dark">Départ</label>
+                            <input type="text"
+                                   name="departure"
+                                   class="form-control rounded-pill"
+                                   placeholder="Ville de départ"
+                                   value="{{ $departure ?? '' }}">
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label fw-bold text-dark">Destination</label>
+                            <input type="text"
+                                   name="destination"
+                                   class="form-control rounded-pill"
+                                   placeholder="Ville destination"
+                                   value="{{ $destination ?? '' }}">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit"
+                                    class="btn btn-primary w-100 rounded-pill">
+                                <i class="fas fa-search"></i>
+                            </button>
                         </div>
                     </div>
-                    @endfor
-            
-            <!-- Pagination -->
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item disabled">
-                        <a class="page-link rounded-pill" href="#">Précédent</a>
-                    </li>
-                    <li class="page-item active"><a class="page-link rounded-pill" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link rounded-pill" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link rounded-pill" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link rounded-pill" href="#">Suivant</a>
-                    </li>
-                </ul>
-            </nav>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- ===== RÉSULTATS ===== -->
+<section class="py-5">
+    <div class="container">
+
+        <!-- Titre résultats -->
+        @if(isset($departure) || isset($destination))
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold mb-0">
+                @if(isset($trips))
+                    {{ $trips->total() }} résultat(s) trouvé(s)
+                    @if($departure)
+                        pour <span class="text-primary">{{ $departure }}</span>
+                    @endif
+                    @if($destination)
+                        → <span class="text-primary">{{ $destination }}</span>
+                    @endif
+                @endif
+            </h5>
+            <a href="{{ route('search') }}" class="btn btn-outline-secondary rounded-pill btn-sm">
+                <i class="fas fa-times me-1"></i>Effacer
+            </a>
+        </div>
+        @else
+        <h5 class="fw-bold mb-4 text-muted text-center">
+            <i class="fas fa-info-circle me-2"></i>
+            Entrez une ville de départ ou de destination pour rechercher
+        </h5>
+        @endif
+
+        <!-- Résultats -->
+        @isset($trips)
+        <div class="row g-4">
+            @forelse($trips as $trip)
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
+
+                    <!-- Header -->
+                    <div class="p-4 text-white"
+                         style="background: linear-gradient(135deg, #1a237e, #0d47a1);">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="fw-bold mb-1">
+                                    {{ $trip->displacement->start_point }}
+                                </h6>
+                                <i class="fas fa-arrow-down my-1 small"></i>
+                                <h6 class="fw-bold mb-0">
+                                    {{ $trip->displacement->destination_point }}
+                                </h6>
+                            </div>
+                            <span class="badge bg-white text-primary px-3 py-2 rounded-pill fw-bold">
+                                {{ number_format($trip->price, 0, ',', ' ') }} F
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <p class="text-muted small mb-1">
+                            <i class="fas fa-calendar me-2 text-primary"></i>
+                            {{ \Carbon\Carbon::parse($trip->living_date_time)->format('d/m/Y à H:i') }}
+                        </p>
+                        <p class="text-muted small mb-1">
+                            <i class="fas fa-bus me-2 text-primary"></i>
+                            {{ $trip->displacement->bus->mack ?? 'N/A' }}
+                        </p>
+
+                        @php
+                            $reserved  = $trip->ticketReservations()
+                                              ->where('status', '!=', 'annulée')
+                                              ->count();
+                            $available = $trip->displacement->bus->capacity - $reserved;
+                        @endphp
+
+                        <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+                            <span class="badge rounded-pill px-3 py-2
+                                {{ $available > 5 ? 'bg-success' : ($available > 0 ? 'bg-warning' : 'bg-danger') }}">
+                                <i class="fas fa-chair me-1"></i>
+                                {{ $available }} places
+                            </span>
+                        </div>
+
+                        @if($available > 0)
+                            <a href="{{ route('details', $trip->id) }}"
+                               class="btn btn-primary w-100 rounded-pill">
+                                <i class="fas fa-ticket-alt me-2"></i>Réserver
+                            </a>
+                        @else
+                            <button class="btn btn-secondary w-100 rounded-pill" disabled>
+                                <i class="fas fa-times me-2"></i>Complet
+                            </button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3 d-block opacity-25"></i>
+                <h5 class="text-muted mb-2">Aucun voyage trouvé</h5>
+                <p class="text-muted small">Essayez avec d'autres villes ou dates</p>
+                <a href="{{ route('voyages') }}" class="btn btn-primary rounded-pill px-5 mt-2">
+                    <i class="fas fa-road me-2"></i>Voir tous les voyages
+                </a>
+            </div>
+            @endforelse
+        </div>
+
+        <!-- Pagination -->
+        @if($trips->hasPages())
+        <div class="d-flex justify-content-center mt-5">
+            {{ $trips->links() }}
+        </div>
+        @endif
+        @endisset
+
+    </div>
+</section>
+
 @endsection
