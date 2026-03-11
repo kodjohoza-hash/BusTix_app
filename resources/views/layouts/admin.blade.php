@@ -174,10 +174,11 @@
                class="nav-link {{ request()->routeIs('admin.bus') ? 'active' : '' }}">
                 <i class="fas fa-bus"></i> Bus
             </a>
-            <a href="{{ route('admin.voyages') }}"
-               class="nav-link {{ request()->routeIs('admin.voyages') ? 'active' : '' }}">
-                <i class="fas fa-route"></i> Voyages
-            </a>
+           <!-- Par -->
+<a href="{{ route('admin.voyages') }}"
+   class="nav-link {{ request()->routeIs('admin.voyages') ? 'active' : '' }}">
+    <i class="fas fa-route"></i> Displacements
+</a>
             <a href="{{ route('admin.users') }}"
                class="nav-link {{ request()->routeIs('admin.users') ? 'active' : '' }}">
                 <i class="fas fa-users"></i> Clients
@@ -202,11 +203,24 @@
     <!-- ===== CONTENU PRINCIPAL ===== -->
     <div class="main-content">
 
-        <!-- Top Navbar -->
+      <!-- Top Navbar -->
         <div class="top-navbar">
-            <div>
-                <h5 class="mb-0 fw-bold">@yield('title')</h5>
-                <small class="text-muted">@yield('subtitle', 'BusTix Administration')</small>
+            <div class="d-flex align-items-center gap-3">
+                <!-- Bouton Retour -->
+                <!-- Bouton Retour - caché sur le dashboard -->
+@if(!request()->routeIs('admin.dashboard'))
+<button onclick="goBack('{{ route('admin.dashboard') }}')"
+        class="btn btn-sm rounded-pill px-3 py-2 me-2"
+        style="background: linear-gradient(135deg, #1a237e, #0d47a1);
+               color: white; border: none;
+               box-shadow: 0 3px 10px rgba(26,35,126,0.3);">
+    <i class="fas fa-arrow-left me-1"></i>Retour
+</button>
+@endif
+                <div>
+                    <h5 class="mb-0 fw-bold">@yield('title')</h5>
+                    <small class="text-muted">@yield('subtitle', 'BusTix Administration')</small>
+                </div>
             </div>
             <div class="d-flex align-items-center gap-3">
                 <!-- Profil Admin -->
@@ -218,7 +232,7 @@
                     </div>
                     <div>
                         <div class="fw-bold small">{{ auth()->user()->name }}</div>
-                        <div class="text-muted" style="font-size:0.75rem">Administrateur</div>
+                        <div class="text-muted" style="font-size:0.75rem">Super Admin</div>
                     </div>
                 </div>
             </div>
@@ -250,6 +264,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script>
+        function goBack(fallback) {
+        if (document.referrer && document.referrer.includes('/admin')) {
+        history.back();
+          } else {
+             window.location.href = fallback;
+          }
+    }
+    </script>
 
     @stack('scripts')
 </body>

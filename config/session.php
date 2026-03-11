@@ -31,7 +31,12 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 120),
+    // Remplace :
+'lifetime' => env('SESSION_LIFETIME', 120),
+
+// Par :
+'lifetime' => env('SESSION_LIFETIME', 480),
+
 
     'expire_on_close' => false,
 

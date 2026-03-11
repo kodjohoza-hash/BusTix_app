@@ -71,7 +71,12 @@ class ReservationController extends Controller
         ]);
 
         return redirect()->route('client.payment.create', $reservation->id)
-                         ->with('success', 'Réservation créée ! Procédez au paiement.');
+                 ->withHeaders([
+                     'Cache-Control' => 'no-store, no-cache, must-revalidate',
+                     'Pragma'        => 'no-cache',
+                     'Expires'       => '0',
+                 ])
+                 ->with('success', 'Réservation créée ! Procédez au paiement.');
     }
 
     /**

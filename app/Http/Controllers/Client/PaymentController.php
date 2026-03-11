@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
@@ -14,9 +13,6 @@ class PaymentController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * Affiche le formulaire de paiement
-     */
     public function create(string $reservationId)
     {
         $reservation = Ticket_reservation::with(['trip.displacement', 'seat'])
@@ -24,44 +20,57 @@ class PaymentController extends Controller
                                          ->where('customer_id', auth()->user()->customer->id)
                                          ->firstOrFail();
 
-        // Vérifie si déjà payé
         if ($reservation->payment) {
-            return redirect()->route('client.reservations')
-                             ->with('error', 'Cette réservation est déjà payée !');
+            return redirect()->route('reservations')
+                             ->with('info', 'Cette réservation est déjà payée !');
+        }
+
+        if ($reservation->status === 'annulée') {
+            return redirect()->route('reservations')
+                             ->with('error', 'Cette réservation a été annulée !');
         }
 
         return view('pages.paiement', compact('reservation'));
     }
 
-    /**
-     * Enregistre le paiement
-     */
     public function store(Request $request, string $reservationId)
     {
         $reservation = Ticket_reservation::where('id', $reservationId)
                                          ->where('customer_id', auth()->user()->customer->id)
                                          ->firstOrFail();
 
+        // Vérifie si déjà payé - évite la double soumission
+        if ($reservation->payment) {
+            return redirect()->route('reservations')
+                             ->with('info', 'Cette réservation est déjà payée !');
+        }
+
+        // Vérifie si déjà annulée
+        if ($reservation->status === 'annulée') {
+            return redirect()->route('reservations')
+                             ->with('error', 'Cette réservation a été annulée !');
+        }
+
         $validated = $request->validate([
-           'payment_mode' => 'required|in:espèces,mobile_money,carte_bancaire',
-    ]);
+            'payment_mode' => 'required|in:espèces,mobile_money,carte_bancaire',
+        ]);
 
         // Génération référence transaction
         $reference = 'PAY-' . now()->format('Ymd') . '-' . strtoupper(substr(uniqid(), -8));
 
         // Création du paiement
         Payment::create([
-        'reservation_id'        => $reservation->id,
-        'amount'                => $reservation->trip->price,
-        'payment_mode'          => $validated['payment_mode'],
-        'transaction_reference' => $reference,
-        'payment_date'          => now(),
-    ]);
+            'reservation_id'        => $reservation->id,
+            'amount'                => $reservation->trip->price,
+            'payment_mode'          => $validated['payment_mode'],
+            'transaction_reference' => $reference,
+            'payment_date'          => now(),
+        ]);
 
-        // Confirmation automatique de la réservation
+        // Confirmation automatique
         $reservation->update(['status' => 'confirmée']);
 
         return redirect()->route('reservations')
-                 ->with('success', 'Paiement effectué avec succès ! Votre billet : ' . $reservation->ticket_code);
+                         ->with('success', 'Paiement effectué ! Votre billet : ' . $reservation->ticket_code);
     }
 }

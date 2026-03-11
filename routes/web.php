@@ -17,11 +17,6 @@ use App\Http\Controllers\Guichet\PaymentController as GuichetPaymentController;
 use App\Http\Controllers\Guichet\ClientController as GuichetClientController;
 use App\Http\Controllers\Guichet\VoyageController as GuichetVoyageController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes - BusTix
-|--------------------------------------------------------------------------
-*/
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -44,6 +39,8 @@ Route::prefix('admin')
     Route::post('bus', [AdminBusController::class, 'store'])->name('bus.store');
     Route::put('bus/{id}', [AdminBusController::class, 'update'])->name('bus.update');
     Route::delete('bus/{id}', [AdminBusController::class, 'destroy'])->name('bus.destroy');
+
+  
 
     // Voyages
     Route::get('voyages', [AdminVoyageController::class, 'index'])->name('voyages');
@@ -92,6 +89,7 @@ Route::prefix('guichet')
 
     // Voyages
     Route::get('voyages', [GuichetVoyageController::class, 'index'])->name('voyages');
+
 });
 
 /*
@@ -118,6 +116,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ClientProfileController::class, 'index'])->name('profile');
     Route::put('/profile', [ClientProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ClientProfileController::class, 'password'])->name('profile.password');
+
+    Route::get('/refresh-csrf', function() {
+        return response()->json(['token' => csrf_token()]);
+    });
 });
 
 /*

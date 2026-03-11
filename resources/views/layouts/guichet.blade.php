@@ -82,9 +82,10 @@
            class="nav-link {{ request()->routeIs('guichet.payments*') ? 'active' : '' }}">
             <i class="fas fa-money-bill me-2"></i>Paiements
         </a>
-        <a href="{{ route('guichet.voyages') }}"
+        <!-- Par -->
+<a href="{{ route('guichet.voyages') }}"
            class="nav-link {{ request()->routeIs('guichet.voyages*') ? 'active' : '' }}">
-            <i class="fas fa-bus me-2"></i>Voyages
+            <i class="fas fa-route me-2"></i>Displacements
         </a>
         <a href="{{ route('guichet.clients') }}"
            class="nav-link {{ request()->routeIs('guichet.clients*') ? 'active' : '' }}">
@@ -95,9 +96,21 @@
 
 <!-- ===== TOPBAR ===== -->
 <div class="topbar">
-    <div>
-        <h6 class="mb-0 fw-bold">@yield('title')</h6>
-        <small class="text-muted">@yield('subtitle')</small>
+    <div class="d-flex align-items-center gap-3">
+     <!-- Bouton Retour - caché sur le dashboard -->
+@if(!request()->routeIs('guichet.dashboard'))
+<button onclick="goBack('{{ route('guichet.dashboard') }}')"
+        class="btn btn-sm rounded-pill px-3 py-2 me-2"
+        style="background: linear-gradient(135deg, #e65100, #bf360c);
+               color: white; border: none;
+               box-shadow: 0 3px 10px rgba(230,81,0,0.3);">
+    <i class="fas fa-arrow-left me-1"></i>Retour
+</button>
+@endif
+        <div>
+            <h6 class="mb-0 fw-bold">@yield('title')</h6>
+            <small class="text-muted">@yield('subtitle')</small>
+        </div>
     </div>
     <div class="dropdown">
         <button class="btn btn-light rounded-pill dropdown-toggle" data-bs-toggle="dropdown">
@@ -124,6 +137,15 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+function goBack(fallback) {
+    if (document.referrer && document.referrer.includes('/guichet')) {
+        history.back();
+    } else {
+        window.location.href = fallback;
+    }
+}
+</script>
 @stack('scripts')
 </body>
 </html>

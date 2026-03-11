@@ -220,6 +220,19 @@
             document.getElementById('selectedSeatNumber').textContent = seatNumber;
             document.getElementById('selectedSeatInfo').classList.remove('d-none');
             document.getElementById('reserveBtn').removeAttribute('disabled');
+            // Empêcher la re-soumission du formulaire après retour
+if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+}
+
+// Désactiver le bouton après soumission
+document.querySelector('form')?.addEventListener('submit', function() {
+    const btn = this.querySelector('button[type="submit"]');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Réservation en cours...';
+    }
+});
         });
     });
 </script>
