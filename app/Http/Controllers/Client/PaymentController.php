@@ -73,4 +73,29 @@ class PaymentController extends Controller
         return redirect()->route('reservations')
                          ->with('success', 'Paiement effectué ! Votre billet : ' . $reservation->ticket_code);
     }
+    public function history()
+    {
+        $customer = auth()->user()->customer;
+
+        $payments = Payment::with([
+            'ticketReservation.trip.displacement',
+            'ticketReservation.seat'
+        ])
+        ->whereHas('ticketReservation', function($q) use ($customer) {
+            $q->where('customer_id', $customer->id);
+        })
+        ->latest('payment_date')
+        ->paginate(10);
+
+        $totalDepense  = $payments->sum('amount');
+        $totalPaiements = Payment::whereHas('ticketReservation', function($q) use ($customer) {
+            $q->where('customer_id', $customer->id);
+        })->count();
+
+        return view('pages.mes-paiements', compact(
+            'payments',
+            'totalDepense',
+            'totalPaiements'
+        ));
+    }
 }

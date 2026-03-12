@@ -187,6 +187,10 @@
                class="nav-link {{ request()->routeIs('admin.reservations') ? 'active' : '' }}">
                 <i class="fas fa-ticket-alt"></i> Réservations
             </a>
+            <a href="{{ route('admin.payments') }}"
+               class="nav-link {{ request()->routeIs('admin.payments') ? 'active' : '' }}">
+                <i class="fas fa-money-bill-wave"></i> Paiements
+            </a>
 
             <div class="nav-section-title">Compte</div>
             <form method="POST" action="{{ route('logout') }}">

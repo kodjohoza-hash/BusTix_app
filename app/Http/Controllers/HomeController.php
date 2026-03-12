@@ -1,18 +1,14 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Trip;
-use App\Models\Displacement;
 
 class HomeController extends Controller
 {
-    /**
-     * Page d'accueil client
-     */
+    // Pas de middleware ici - page publique !
+
     public function index()
     {
-        // 4 prochains voyages disponibles pour la home
         $featuredTrips = Trip::with(['displacement.bus'])
                              ->where('travel_status', 'planifié')
                              ->where('living_date_time', '>', now())

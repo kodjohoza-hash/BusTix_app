@@ -29,13 +29,13 @@
         0%, 100% { transform: scale(1); }
         50%       { transform: scale(1.05); }
     }
-    @keyframes road {
-        from { transform: translateX(0); }
-        to   { transform: translateX(-50%); }
+   @keyframes road {
+        from { transform: translateX(-50%); }
+        to   { transform: translateX(0); }
     }
     @keyframes busMove {
-        from { transform: translateX(-150px); }
-        to   { transform: translateX(110vw); }
+        from { transform: translateX(-150px) scaleX(1); }
+        to   { transform: translateX(110vw) scaleX(1); }
     }
     @keyframes shimmer {
         0%   { background-position: -200% center; }
@@ -164,12 +164,14 @@
         flex-shrink: 0;
     }
 
-    .moving-bus {
+   .moving-bus {
         position: absolute;
         top: -15px;
         font-size: 40px;
         animation: busMove 8s linear infinite;
         filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+        display: inline-block;
+        transform-origin: center;
     }
 
     /* ===== SEARCH ===== */
@@ -478,7 +480,7 @@
 
 <!-- ===== ROUTE ANIMÉE ===== -->
 <div class="road-section">
-    <i class="fas fa-bus moving-bus">🚌</i>
+    <span class="moving-bus">🚌</span>
     <div class="road-line">
         @for($i=0; $i<40; $i++)
             <div class="road-dash"></div>

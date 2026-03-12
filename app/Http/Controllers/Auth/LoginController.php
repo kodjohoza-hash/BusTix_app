@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -19,14 +18,18 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        if ($user->isSuperAdmin()) {
-            return redirect()->route('admin.dashboard');
-        }
+        if ($user->isSuperAdmin()) return redirect()->route('admin.dashboard');
+        if ($user->isGuichet())    return redirect()->route('guichet.dashboard');
 
-        if ($user->isGuichet()) {
-            return redirect()->route('guichet.dashboard');
-        }
+        // Redirige vers la page d'origine si présente
+        $redirect = $request->query('redirect');
+        if ($redirect) return redirect($redirect);
 
+        return redirect()->route('home');
+    }
+
+    protected function loggedOut(Request $request)
+    {
         return redirect()->route('home');
     }
 }

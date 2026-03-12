@@ -66,9 +66,16 @@
                             </a>
                         </li>
                         <li>
+                            <li>
                             <a class="dropdown-item py-2" href="{{ route('reservations') }}">
                                 <i class="fas fa-ticket-alt me-2 text-primary"></i>Mes Réservations
                             </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item py-2" href="{{ route('client.payments.history') }}">
+                                <i class="fas fa-receipt me-2 text-primary"></i>Mes Paiements
+                            </a>
+                        </li>
                         </li>
                         @if(auth()->user()->isSuperAdmin())
                         <li><hr class="dropdown-divider"></li>
@@ -89,6 +96,7 @@
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
+                                <input type="hidden" name="redirect" value="{{ route('home') }}">
                                 <button type="submit" class="dropdown-item py-2 text-danger">
                                     <i class="fas fa-sign-out-alt me-2"></i>Déconnexion
                                 </button>

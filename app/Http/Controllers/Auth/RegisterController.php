@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -8,27 +7,19 @@ use App\Models\Customer;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
     use RegistersUsers;
 
-    /**
-     * Redirection après inscription
-     */
     protected $redirectTo = '/home';
 
-    /**
-     * Constructeur - accessible uniquement aux invités
-     */
     public function __construct()
     {
         $this->middleware('guest');
     }
 
-    /**
-     * Validation des données d'inscription
-     */
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -40,12 +31,8 @@ class RegisterController extends Controller
         ]);
     }
 
-    /**
-     * Création du nouvel utilisateur + profil client
-     */
     protected function create(array $data)
     {
-        // Création du compte utilisateur
         $user = User::create([
             'name'         => $data['name'],
             'user_surname' => $data['user_surname'],
@@ -56,16 +43,25 @@ class RegisterController extends Controller
             'actif'        => true,
         ]);
 
-        // Création automatique du profil client
         Customer::create([
             'user_id'   => $user->id,
             'name'      => $data['name'],
             'surname'   => $data['user_surname'],
             'telephone' => $data['telephone'],
             'email'     => $data['email'],
-            'id_card'   => 0, // À compléter plus tard
+            'id_card'   => 0,
         ]);
 
         return $user;
+    }
+
+    /**
+     * Redirection après inscription réussie
+     */
+    protected function registered(Request $request, $user)
+    {
+        $redirect = $request->input('redirect');
+        if ($redirect) return redirect($redirect);
+        return redirect()->route('home');
     }
 }

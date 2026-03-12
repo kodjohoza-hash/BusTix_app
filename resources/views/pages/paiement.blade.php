@@ -362,7 +362,8 @@
                                     <i class="fas fa-arrow-left me-2"></i>Annuler
                                 </a>
                                 <button type="submit" id="btnPayer"
-                                        class="btn btn-primary rounded-pill px-4 flex-grow-1">
+                                        class="btn btn-primary rounded-pill px-4 flex-grow-1"
+                                        onclick="this.disabled=true;this.innerHTML='<i class=\'fas fa-spinner fa-spin me-2\'></i>Traitement...';this.form.submit();">
                                     <i class="fas fa-check me-2"></i>
                                     Confirmer — {{ number_format($reservation->trip->price, 0, ',', ' ') }} FCFA
                                 </button>
@@ -384,7 +385,6 @@
 // ===== Affichage sections selon mode =====
 document.querySelectorAll('input[name="payment_mode"]').forEach(radio => {
     radio.addEventListener('change', function() {
-        // Cacher toutes les sections
         document.querySelectorAll('.payment-section').forEach(s => s.classList.add('d-none'));
 
         if (this.value === 'espèces') {
@@ -419,7 +419,6 @@ document.getElementById('cardNumber').addEventListener('input', function() {
     let val = this.value.replace(/\D/g, '').substring(0, 16);
     this.value = val.replace(/(.{4})/g, '$1 ').trim();
 
-    // Détecter type de carte
     const icon = document.getElementById('cardType');
     if (val.startsWith('4')) {
         icon.innerHTML = '<i class="fab fa-cc-visa text-primary fs-5"></i>';
@@ -462,5 +461,30 @@ function toggleCvv() {
         icon.classList.replace('fa-eye-slash', 'fa-eye');
     }
 }
+
+// ===== Empêcher retour arrière sur page paiement =====
+history.pushState(null, null, location.href);
+window.addEventListener('popstate', function() {
+    history.pushState(null, null, location.href);
+});
+
+// ===== Anti double soumission formulaire =====
+let formSubmitted = false;
+document.querySelector('form').addEventListener('submit', function(e) {
+    if (formSubmitted) {
+        e.preventDefault();
+        return false;
+    }
+    formSubmitted = true;
+});
+// ===== Réinitialiser le bouton si on revient en arrière =====
+window.addEventListener('pageshow', function(e) {
+    if (e.persisted) {
+        const btn = document.getElementById('btnPayer');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check me-2"></i>Confirmer';
+        formSubmitted = false;
+    }
+});
 </script>
 @endpush
