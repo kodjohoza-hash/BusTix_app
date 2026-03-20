@@ -190,7 +190,7 @@
                  style="width:60px;height:60px;background:linear-gradient(135deg,#1a237e,#0d47a1)">
                 <i class="fas fa-user-plus text-white fs-5"></i>
             </div>
-            <h4 class="fw-bold mb-1">Créer un compte 🚀</h4>
+            <h4 class="fw-bold mb-1">Créer un compte</h4>
             <p class="text-muted small">Remplissez le formulaire ci-dessous</p>
         </div>
 

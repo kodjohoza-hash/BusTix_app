@@ -121,12 +121,19 @@ Route::middleware('auth')->group(function () {
     Route::post('/paiement/{id}', [ClientPaymentController::class, 'store'])->name('client.payment.store');
 
     Route::get('/mes-paiements', [ClientPaymentController::class, 'history'])->name('client.payments.history');
+    Route::get('/billet/{id}', [ClientPaymentController::class, 'billet'])->name('client.billet');
 
     Route::get('/profile', [ClientProfileController::class, 'index'])->name('profile');
     Route::put('/profile', [ClientProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ClientProfileController::class, 'password'])->name('profile.password');
 
-    Route::get('/refresh-csrf', function() {
+   Route::get('/refresh-csrf', function() {
         return response()->json(['token' => csrf_token()]);
     });
+
+    // Messagerie
+    Route::get('/messages', [App\Http\Controllers\MessageController::class, 'index'])->name('messages');
+    Route::post('/messages', [App\Http\Controllers\MessageController::class, 'store'])->name('messages.store');
+    Route::get('/messages/fetch', [App\Http\Controllers\MessageController::class, 'fetch'])->name('messages.fetch');
+    Route::get('/messages/unread', [App\Http\Controllers\MessageController::class, 'unread'])->name('messages.unread');
 });

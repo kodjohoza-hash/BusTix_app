@@ -174,7 +174,7 @@
                  style="width:60px;height:60px;background:linear-gradient(135deg,#1a237e,#0d47a1)">
                 <i class="fas fa-bus text-white fs-4"></i>
             </div>
-            <h4 class="fw-bold mb-1">Bienvenue ! 👋</h4>
+            <h4 class="fw-bold mb-1">Bienvenue !</h4>
             <p class="text-muted small">Connectez-vous à votre compte</p>
         </div>
 

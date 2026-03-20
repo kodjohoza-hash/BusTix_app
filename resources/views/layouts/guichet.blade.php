@@ -91,6 +91,14 @@
            class="nav-link {{ request()->routeIs('guichet.clients*') ? 'active' : '' }}">
             <i class="fas fa-users me-2"></i>Clients
         </a>
+        <a href="{{ route('messages') }}"
+           class="nav-link {{ request()->routeIs('messages') ? 'active' : '' }}"
+           style="display:flex;align-items:center;">
+            <i class="fas fa-comments me-2"></i>Messagerie
+            <span class="notification-badge ms-auto"
+                  style="background:#f44336;color:white;border-radius:50%;width:20px;height:20px;
+                         font-size:0.7rem;display:none;align-items:center;justify-content:center;">0</span>
+        </a>
     </nav>
 </div>
 
@@ -145,6 +153,22 @@ function goBack(fallback) {
         window.location.href = fallback;
     }
 }
+</script>
+<script>
+function checkNotifications() {
+    fetch('{{ route("messages.unread") }}')
+    .then(r => r.json())
+    .then(data => {
+        document.querySelectorAll('.notification-badge').forEach(b => {
+            b.textContent = data.count;
+            b.style.display = data.count > 0 ? 'flex' : 'none';
+        });
+    });
+}
+@auth
+setInterval(checkNotifications, 3000);
+checkNotifications();
+@endauth
 </script>
 @stack('scripts')
 </body>

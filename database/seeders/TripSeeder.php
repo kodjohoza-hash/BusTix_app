@@ -1,51 +1,43 @@
 <?php
-
 namespace Database\Seeders;
-
 use Illuminate\Database\Seeder;
 use App\Models\Trip;
 use App\Models\Displacement;
 
-/**
- * TripSeeder - Crée les voyages de test
- * 
- * Insère des voyages planifiés pour les
- * prochains jours dans BusTix.
- */
 class TripSeeder extends Seeder
 {
     public function run(): void
     {
-        // Récupère tous les trajets
         $displacements = Displacement::all();
 
-        // Création de voyages pour chaque trajet
+        // Horaires fixes pour chaque voyage
+        $horaires = [
+            ['hour' => 6,  'minute' => 0],
+            ['hour' => 9,  'minute' => 0],
+            ['hour' => 12, 'minute' => 0],
+            ['hour' => 15, 'minute' => 0],
+            ['hour' => 18, 'minute' => 0],
+        ];
+
+        // Générer des voyages pour les 60 prochains jours
         foreach ($displacements as $displacement) {
-            // Voyage demain matin
-            Trip::create([
-                'displacement_id'  => $displacement->id,
-                'living_date_time' => now()->addDay()->setTime(7, 0),
-                'price'            => $displacement->prix,
-                'travel_status'    => 'planifié',
-            ]);
-
-            // Voyage demain après-midi
-            Trip::create([
-                'displacement_id'  => $displacement->id,
-                'living_date_time' => now()->addDay()->setTime(14, 0),
-                'price'            => $displacement->prix,
-                'travel_status'    => 'planifié',
-            ]);
-
-            // Voyage dans 3 jours
-            Trip::create([
-                'displacement_id'  => $displacement->id,
-                'living_date_time' => now()->addDays(3)->setTime(8, 0),
-                'price'            => $displacement->prix,
-                'travel_status'    => 'planifié',
-            ]);
+            for ($day = 1; $day <= 60; $day++) {
+                // 2 voyages par jour par trajet
+                foreach (array_slice($horaires, 0, 2) as $horaire) {
+                    Trip::firstOrCreate(
+                        [
+                            'displacement_id'  => $displacement->id,
+                            'living_date_time' => now()->addDays($day)->setTime($horaire['hour'], $horaire['minute']),
+                        ],
+                        [
+                            'price'         => $displacement->prix,
+                            'travel_status' => 'planifié',
+                        ]
+                    );
+                }
+            }
         }
 
-        $this->command->info('✅ Voyages créés avec succès !');
+        $this->command->info('✅ Voyages créés pour les 60 prochains jours !');
     }
 }

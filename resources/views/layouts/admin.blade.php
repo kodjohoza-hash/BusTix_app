@@ -192,6 +192,16 @@
                 <i class="fas fa-money-bill-wave"></i> Paiements
             </a>
 
+            <div class="nav-section-title">Communication</div>
+            <a href="{{ route('messages') }}"
+               class="nav-link {{ request()->routeIs('messages') ? 'active' : '' }}">
+                <i class="fas fa-comments"></i> Messagerie
+                <span class="notification-badge ms-1"
+                      style="background:#f44336;color:white;border-radius:50%;width:20px;height:20px;
+                             font-size:0.7rem;display:none;align-items:center;justify-content:center;
+                             margin-left:auto;">0</span>
+            </a>
+
             <div class="nav-section-title">Compte</div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
@@ -277,6 +287,23 @@
           }
     }
     </script>
+    <script>
+// ===== Polling notifications =====
+function checkNotifications() {
+    fetch('{{ route("messages.unread") }}')
+    .then(r => r.json())
+    .then(data => {
+        document.querySelectorAll('.notification-badge').forEach(b => {
+            b.textContent = data.count;
+            b.style.display = data.count > 0 ? 'flex' : 'none';
+        });
+    });
+}
+@auth
+setInterval(checkNotifications, 3000);
+checkNotifications();
+@endauth
+</script>
 
     @stack('scripts')
 </body>

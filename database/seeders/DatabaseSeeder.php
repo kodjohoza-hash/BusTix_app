@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->command->info('🚀 Démarrage du seeding de BusTix...');
+        $this->command->info(' Démarrage du seeding de BusTix...');
 
         $this->call([
             RoleSeeder::class,       // 1. Rôles en premier

@@ -59,7 +59,7 @@ class PaymentController extends Controller
         $reference = 'PAY-' . now()->format('Ymd') . '-' . strtoupper(substr(uniqid(), -8));
 
         // Création du paiement
-        Payment::create([
+        $payment = Payment::create([
             'reservation_id'        => $reservation->id,
             'amount'                => $reservation->trip->price,
             'payment_mode'          => $validated['payment_mode'],
@@ -70,8 +70,8 @@ class PaymentController extends Controller
         // Confirmation automatique
         $reservation->update(['status' => 'confirmée']);
 
-        return redirect()->route('reservations')
-                         ->with('success', 'Paiement effectué ! Votre billet : ' . $reservation->ticket_code);
+        return redirect()->route('client.billet', $payment->id)
+                         ->with('success', 'Paiement confirmé ! Voici votre billet.');
     }
     public function history()
     {
@@ -98,4 +98,20 @@ class PaymentController extends Controller
             'totalPaiements'
         ));
     }
+    public function billet(string $id)
+{
+    $payment = \App\Models\Payment::with([
+        'ticketReservation.trip.displacement',
+        'ticketReservation.seat',
+        'ticketReservation.customer'
+    ])->findOrFail($id);
+
+    // Vérifier que c'est bien le client connecté
+    $customer = auth()->user()->customer;
+    if ($payment->ticketReservation->customer_id !== $customer->id) {
+        abort(403);
+    }
+
+    return view('pages.billet', compact('payment'));
+}
 }
