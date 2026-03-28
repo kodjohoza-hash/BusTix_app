@@ -38,4 +38,8 @@ class Bus extends Model
     {
         return $this->hasMany(Ticket_reservation::class);
     }
+    public function driver()
+    {
+        return $this->hasOne(Driver::class);
+    }
 }

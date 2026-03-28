@@ -74,12 +74,6 @@ setInterval(function() {
 </script>
 
     @stack('scripts')
+    
 </body>
 </html>
-```
-
----
-
-Dis-moi quand c'est fait, rafraîchis la page ! 
-```
-http://127.0.0.1:8000/login

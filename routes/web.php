@@ -65,6 +65,13 @@ Route::prefix('admin')
 
     // Paiements
     Route::get('payments', [AdminPaymentController::class, 'index'])->name('payments');
+
+    // Drivers
+    Route::get('drivers', [App\Http\Controllers\Admin\DriverController::class, 'index'])->name('drivers');
+    Route::get('drivers/check-license', [App\Http\Controllers\Admin\DriverController::class, 'checkLicense'])->name('drivers.check');
+    Route::post('drivers', [App\Http\Controllers\Admin\DriverController::class, 'store'])->name('drivers.store');
+    Route::put('drivers/{id}', [App\Http\Controllers\Admin\DriverController::class, 'update'])->name('drivers.update');
+    Route::delete('drivers/{id}', [App\Http\Controllers\Admin\DriverController::class, 'destroy'])->name('drivers.destroy');
 });
 
 /*
@@ -97,6 +104,9 @@ Route::prefix('guichet')
 
     // Voyages
     Route::get('voyages', [GuichetVoyageController::class, 'index'])->name('voyages');
+
+    // Drivers
+    Route::get('drivers', [App\Http\Controllers\Guichet\DriverController::class, 'index'])->name('drivers');
 });
 
 /*
@@ -110,12 +120,14 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/voyages', [ClientTripController::class, 'index'])->name('voyages');
 Route::get('/search', [ClientTripController::class, 'search'])->name('search');
 Route::get('/details/{id}', [ClientTripController::class, 'show'])->name('details');
+Route::post('/chatbot', [App\Http\Controllers\ChatbotController::class, 'reply'])->name('chatbot');
 
 // Pages privées - connexion requise
 Route::middleware('auth')->group(function () {
     Route::get('/reservations', [ClientReservationController::class, 'index'])->name('reservations');
     Route::post('/reservations', [ClientReservationController::class, 'store'])->name('client.reservations.store');
     Route::delete('/reservations/{id}', [ClientReservationController::class, 'destroy'])->name('client.reservations.destroy');
+    Route::post('/chatbot', [App\Http\Controllers\ChatbotController::class, 'reply'])->name('chatbot');
 
     Route::get('/paiement/{id}', [ClientPaymentController::class, 'create'])->name('client.payment.create');
     Route::post('/paiement/{id}', [ClientPaymentController::class, 'store'])->name('client.payment.store');

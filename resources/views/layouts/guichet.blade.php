@@ -91,6 +91,10 @@
            class="nav-link {{ request()->routeIs('guichet.clients*') ? 'active' : '' }}">
             <i class="fas fa-users me-2"></i>Clients
         </a>
+        <a href="{{ route('guichet.drivers') }}"
+   class="nav-link {{ request()->routeIs('guichet.drivers') ? 'active' : '' }}">
+    <i class="fas fa-id-card me-2"></i>Drivers
+</a>
         <a href="{{ route('messages') }}"
            class="nav-link {{ request()->routeIs('messages') ? 'active' : '' }}"
            style="display:flex;align-items:center;">

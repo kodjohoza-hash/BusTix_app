@@ -191,6 +191,10 @@
                class="nav-link {{ request()->routeIs('admin.payments') ? 'active' : '' }}">
                 <i class="fas fa-money-bill-wave"></i> Paiements
             </a>
+            <a href="{{ route('admin.drivers') }}"
+               class="nav-link {{ request()->routeIs('admin.drivers') ? 'active' : '' }}">
+                <i class="fas fa-id-card"></i> Drivers
+            </a>
 
             <div class="nav-section-title">Communication</div>
             <a href="{{ route('messages') }}"
